@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/details_activity_layout"
+    tools:context="com.example.clayto.assignment8_rss.DetailsActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:text="Nintendo To Launch Super Smash Bros. For Wii U And Its Amiibo Interactive Toys Nov. 21"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:paddingBottom="10sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/publish_date"
+        android:text="Tue, 07 Oct 2014 12:49:43 +0000"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:paddingBottom="20sp"/>
+
+    <TextView
+        android:id="@+id/description"
+        android:text="Nintendo's entry into the 'toys-to-life' market is nearly upon us; the company announced today that it would release its first set of 12 NFC-enabled Amiibo will be available from November 21, along with Super Smash Bros for Wii U, the first game to support the toys. Nintendo's initial lineup of Amiibo toys reflects its strong roster of characters to draw from in order...Read More"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:paddingBottom="10sp"/>
+
+    <TextView
+        android:id="@+id/link"
+        android:text="Read More"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"/>
+
+</LinearLayout>

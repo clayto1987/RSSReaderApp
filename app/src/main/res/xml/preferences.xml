@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="@string/pref_fontSize_key"
+        android:title="@string/pref_font_size"
+        android:dialogTitle="@string/pref_font_size"
+        android:entries="@array/pref_font_size_entries"
+        android:entryValues="@array/pref_font_size_entries"
+        android:defaultValue="@string/pref_font_size_default_value" />
+    <ListPreference
+        android:key="@string/pref_colorScheme_key"
+        android:title="@string/pref_color_scheme"
+        android:dialogTitle="@string/pref_color_scheme"
+        android:entries="@array/pref_color_scheme_entries"
+        android:entryValues="@array/pref_color_scheme_entries"
+        android:defaultValue="@string/pref_color_scheme_default_value" />
+    <ListPreference
+        android:key="@string/pref_sorting_key"
+        android:title="@string/pref_sorting"
+        android:dialogTitle="@string/pref_sorting"
+        android:entries="@array/pref_sorting_entries"
+        android:entryValues="@array/pref_sorting_entries"
+        android:defaultValue="@string/pref_sorting_default_value" />
+    <ListPreference
+        android:key="@string/pref_defaultFeed_key"
+        android:title="@string/pref_default_feed"
+        android:dialogTitle="@string/pref_default_feed"
+        android:entries="@array/pref_default_feed_entries"
+        android:entryValues="@array/pref_default_feed_entries_values"
+        android:defaultValue="@string/pref_default_feed_default_value" />
+    <com.example.clayto.rssreaderapp.NumberPickerPreference
+        android:key="@string/pref_maxPosts_key"
+        android:title="@string/pref_number_posts_to_view"
+        android:dialogTitle="@string/pref_number_posts_to_view"
+        android:persistent="true"
+        android:defaultValue="10"/>
+    <MultiSelectListPreference
+        android:key="@string/pref_subscribedFeeds_key"
+        android:title="@string/pref_subscribed_feeds"
+        android:dialogTitle="@string/pref_subscribed_feeds"
+        android:entries="@array/pref_subscribed_feeds_entries"
+        android:entryValues="@array/pref_subscribed_feeds_entries"
+        android:defaultValue="@array/pref_subscribed_feeds_entries" />
+</PreferenceScreen>

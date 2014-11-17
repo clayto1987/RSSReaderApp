@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="app_name">RSS Reader</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="please_wait">Please wait…Collecting your RSS feeds.</string>
+    <string name="no_internet">Please verify you are connected to the internet.</string>
+    <string name="title_activity_details">Details</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_font_size">Font Size</string>
+    <string-array name="pref_font_size_entries">
+        <item>Small</item>
+        <item>Normal</item>
+        <item>Large</item>
+    </string-array>
+    <string name="pref_font_size_default_value">Normal</string>
+
+    <string name="pref_sorting">Sorting</string>
+    <string-array name="pref_sorting_entries">
+        <item>By Title Ascending</item>
+        <item>By Title Descending</item>
+        <item>By Date Ascending</item>
+        <item>By Date Descending</item>
+    </string-array>
+    <string name="pref_sorting_default_value">By Date Descending</string>
+
+    <string name="pref_color_scheme">Color Scheme</string>
+    <string-array name="pref_color_scheme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string name="pref_color_scheme_default_value">Dark</string>
+
+    <string name="pref_default_feed">Default Feed</string>
+    <string-array name="pref_default_feed_entries">
+        <item>Breaking News</item>
+        <item>Business</item>
+        <item>Finance</item>
+        <item>Local News</item>
+        <item>Canada News</item>
+        <item>World News</item>
+        <item>Winnipeg Blue Bombers</item>
+        <item>Winnipeg Goldeyes</item>
+        <item>Winnipeg Jets</item>
+        <item>Sports News</item>
+        <item>Baseball</item>
+        <item>Basketball</item>
+        <item>Curling</item>
+        <item>Football</item>
+        <item>Golf</item>
+        <item>Hockey</item>
+        <item>Soccer</item>
+        <item>Tennis</item>
+        <item>Other Sports News</item>
+        <item>Editorials</item>
+        <item>View From The West</item>
+        <item>The Arts</item>
+        <item>Movies</item>
+        <item>Music</item>
+        <item>Television</item>
+        <item>Life</item>
+        <item>Your Health</item>
+        <item>The Green Page</item>
+        <item>Travel</item>
+    </string-array>
+    <string-array name="pref_default_feed_entries_values">
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fbreakingnews</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fbusiness&amp;path=%2Fbusiness</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fbusiness%2Ffinance</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Flocal</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fcanada</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fworld</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Ffootball%2Fbombers&amp;path=%2Fsports%2Ffootball%2Fbombers</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fbaseball%2Fgoldeyes</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fhockey%2Fjets</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fbaseball</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fbasketball</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fcurling</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Ffootball</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fgolf</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fhockey</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fsoccer</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Ftennis</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fsports%2Fother</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fopinion%2Feditorials</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Fopinion%2Fwestview</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Fentertainment%2Farts</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Fentertainment%2Fmovies</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Fentertainment%2Fmusic</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Fentertainment%2FTV</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Flife</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Flife%2Fhealth</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Flife%2Fgreenpage</item>
+        <item>http://www.winnipegfreepress.com/rss/?path=%2Ftravel</item>
+    </string-array>
+    <string name="pref_default_feed_default_value">http://www.winnipegfreepress.com/rss/?path=%2Farts-and-life%2Fentertainment%2Fmovies</string>
+
+    <string name="pref_number_posts_to_view">Number of Posts to View</string>
+
+    <string name="pref_subscribed_feeds">Subscribe to Feeds</string>
+    <string-array name="pref_subscribed_feeds_entries">
+        <item>Breaking News</item>
+        <item>Business</item>
+        <item>Finance</item>
+        <item>Local News</item>
+        <item>Canada News</item>
+        <item>World News</item>
+        <item>Winnipeg Blue Bombers</item>
+        <item>Winnipeg Goldeyes</item>
+        <item>Winnipeg Jets</item>
+        <item>Sports News</item>
+        <item>Baseball</item>
+        <item>Basketball</item>
+        <item>Curling</item>
+        <item>Football</item>
+        <item>Golf</item>
+        <item>Hockey</item>
+        <item>Soccer</item>
+        <item>Tennis</item>
+        <item>Other Sports News</item>
+        <item>Editorials</item>
+        <item>View From The West</item>
+        <item>The Arts</item>
+        <item>Movies</item>
+        <item>Music</item>
+        <item>Television</item>
+        <item>Life</item>
+        <item>Your Health</item>
+        <item>The Green Page</item>
+        <item>Travel</item>
+    </string-array>
+
+    <string name="pref_fontSize_key">pref_fontSize</string>
+    <string name="pref_colorScheme_key">pref_colorScheme</string>
+    <string name="pref_sorting_key">pref_sorting</string>
+    <string name="pref_defaultFeed_key">pref_defaultFeed</string>
+    <string name="pref_maxPosts_key">pref_maxPosts</string>
+    <string name="pref_subscribedFeeds_key">pref_subscribedFeeds</string>
+
+</resources>
