@@ -7,7 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:id="@+id/details_activity_layout"
-    tools:context="com.example.clayto.assignment8_rss.DetailsActivity"
+    tools:context="com.example.clayto.rssreaderapp.DetailsActivity"
     android:orientation="vertical">
 
     <TextView

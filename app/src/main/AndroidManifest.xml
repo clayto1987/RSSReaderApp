@@ -15,6 +15,7 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,8 +28,16 @@
                 android:value="com.example.clayto.rssreaderapp.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.example.clayto.rssreaderapp.SettingsActivity"
             android:label="@string/action_settings" >
+        </activity>
+        <activity
+            android:name="com.example.clayto.rssreaderapp.FullArticleActivity"
+            android:label="@string/title_activity_full_article"
+            android:parentActivityName="com.example.clayto.rssreaderapp.DetailsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.clayto.rssreaderapp.DetailsActivity" />
         </activity>
     </application>
 
