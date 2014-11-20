@@ -124,6 +124,7 @@ public class DetailsActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.action_download_article:
+                saveArticleToDatabase();
 //                Intent parseArticleIntent = new Intent(DetailsActivity.this,FullArticleActivity.class);
 //                parseArticleIntent.putExtra(getResources().getString(R.string.article_title),title);
 //                parseArticleIntent.putExtra(getResources().getString(R.string.article_publish_date),publishDate);
@@ -138,6 +139,10 @@ public class DetailsActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void saveArticleToDatabase() {
+        
     }
 
     private class ParseHTML extends AsyncTask<Void, Void, Void> {

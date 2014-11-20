@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        //PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

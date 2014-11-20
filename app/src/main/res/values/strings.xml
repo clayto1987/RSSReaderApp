@@ -152,5 +152,8 @@
     <string name="article_title">title</string>
     <string name="article_publish_date">publish_date</string>
     <string name="article_url_link">url_link</string>
+    <string name="title_activity_home_screen">HomeScreenActivity</string>
+    <string name="new_articles">View New Articles (Online)</string>
+    <string name="saved_articles">View Saved Articles (Offline)</string>
 
 </resources>
