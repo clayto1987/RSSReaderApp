@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.clayto.rssreaderapp.R;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,9 +79,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_TODO_TAG + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_TODO_ID + " INTEGER," + KEY_TAG_ID + " INTEGER,"
             + KEY_CREATED_AT + " DATETIME" + ")";*/
+    private final String[] mCategories;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mCategories = context.getResources().getStringArray(R.array.pref_default_feed_entries);
     }
 
     @Override
@@ -87,6 +91,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating required tables
         db.execSQL(CREATE_TABLE_ARTICLES);
         db.execSQL(CREATE_TABLE_CATEGORIES);
+
+        for(String categoryName : mCategories){
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_CATEGORY_NAME, categoryName);
+            values.put(COLUMN_CREATED_AT, getDateTime());
+            db.insert(TABLE_CATEGORIES, null, values);
+        }
+
     }
 
     @Override
@@ -101,7 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
      * Creating an article
      */
-    public long createArticle(Article article, long categoryID) {
+    public long createArticle(Article article) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -112,16 +124,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
         values.put(COLUMN_ARTICLE_URL_LINK, article.getUrlLink());
         //values.put(COLUMN_ARTICLE_CATEGORY_ID, article.getCategoryID());
-        values.put(COLUMN_ARTICLE_CATEGORY_ID,categoryID);
+        values.put(COLUMN_ARTICLE_CATEGORY_ID,article.getCategoryID());
         values.put(COLUMN_CREATED_AT, getDateTime());
 
         // insert row
         long articleID = db.insert(TABLE_ARTICLES, null, values);
 
-        // assigning tags to todo
+        // assigning tags to todos
         /*for (long tag_id : tag_ids) {
             createTodoTag(todo_id, tag_id);
         }*/
+        db.close();
 
         return articleID;
     }
@@ -153,7 +166,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             article.setUrlLink((c.getString(c.getColumnIndex(COLUMN_ARTICLE_URL_LINK))));
             article.setCategoryID((c.getInt(c.getColumnIndex(COLUMN_ARTICLE_CATEGORY_ID))));
 
+            c.close();
+
         }
+
+        db.close();
+
+        return article;
+    }
+
+    /*
+     * Checking to see if article with specific title exists
+     */
+    public int articleWithTitleExists(String articleTitle) {
+
+        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " LIKE '%" + articleTitle + "%';";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return count;
+    }
+    /*
+     * Get single article
+     */
+    public Article getArticleByTitle(String articleTitle) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Article article = new Article();
+
+        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " LIKE '%" + articleTitle + "%';";
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null) {
+
+            c.moveToFirst();
+
+            article.setId(c.getInt((c.getColumnIndex(COLUMN_ID))));
+            article.setCreatedAt(c.getString(c.getColumnIndex(COLUMN_CREATED_AT)));
+            article.setTitle((c.getString(c.getColumnIndex(COLUMN_ARTICLE_TITLE))));
+            article.setPublishDate((c.getString(c.getColumnIndex(COLUMN_ARTICLE_PUBLISH_DATE))));
+            article.setAuthor((c.getString(c.getColumnIndex(COLUMN_ARTICLE_AUTHOR))));
+            article.setDescription((c.getString(c.getColumnIndex(COLUMN_ARTICLE_DESCRIPTION))));
+            article.setUrlLink((c.getString(c.getColumnIndex(COLUMN_ARTICLE_URL_LINK))));
+            article.setCategoryID((c.getInt(c.getColumnIndex(COLUMN_ARTICLE_CATEGORY_ID))));
+
+            c.close();
+
+        }
+
+        db.close();
 
         return article;
     }
@@ -191,7 +259,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             } while (c.moveToNext());
 
+            c.close();
         }
+
+        db.close();
 
         return articles;
     }
@@ -240,28 +311,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             } while (c.moveToNext());
 
+            c.close();
+
         }
+
+        db.close();
 
         return articles;
     }
 
     /*
-     * Updating an article
+     * Getting article count
      */
-    public int updateArticle(Article article) {
+    public int getArticleCount() {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        String countQuery = "SELECT  * FROM " + TABLE_ARTICLES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
 
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ARTICLE_TITLE, article.getTitle());
-        values.put(COLUMN_ARTICLE_PUBLISH_DATE, article.getPublishDate());
-        values.put(COLUMN_ARTICLE_AUTHOR, article.getAuthor());
-        values.put(COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
-        values.put(COLUMN_ARTICLE_URL_LINK, article.getUrlLink());
-        values.put(COLUMN_ARTICLE_CATEGORY_ID, article.getCategoryID());
-
-        // updating row
-        return db.update(TABLE_ARTICLES, values, COLUMN_ID + " = " + article.getId(),null);
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return count;
     }
 
     /*
@@ -270,24 +342,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteArticle(long articleID) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_ARTICLES, COLUMN_ID + " = " + articleID,null);
+        db.close();
     }
 
-    /*
-     * Creating category
-     */
-    public long createCategory(Category category) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_CATEGORY_NAME, category.getName());
-        values.put(COLUMN_CREATED_AT, getDateTime());
-
-        // insert row
-        long categoryID = db.insert(TABLE_CATEGORIES, null, values);
-
-        return categoryID;
-    }
 
     /*
      * Get single category
@@ -311,7 +368,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             category.setCreatedAt(c.getString(c.getColumnIndex(COLUMN_CREATED_AT)));
             category.setName((c.getString(c.getColumnIndex(COLUMN_CATEGORY_NAME))));
 
+            c.close();
         }
+
+        db.close();
+
+        return category;
+    }
+
+    /*
+     * Get single category
+     */
+    public Category getCategoryByName(String categoryName) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Category category = new Category();
+
+        String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_CATEGORY_NAME + " LIKE '%" + categoryName + "%';";
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null) {
+
+            c.moveToFirst();
+
+            category.setId(c.getInt((c.getColumnIndex(COLUMN_ID))));
+            category.setCreatedAt(c.getString(c.getColumnIndex(COLUMN_CREATED_AT)));
+            category.setName((c.getString(c.getColumnIndex(COLUMN_CATEGORY_NAME))));
+
+            c.close();
+
+        }
+
+        db.close();
 
         return category;
     }
@@ -344,24 +435,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             } while (c.moveToNext());
 
+            c.close();
+
         }
+
+        db.close();
 
         return categories;
     }
 
     /*
-     * Updating a category
+     * Getting category count
      */
-    public int updateCategory(Category category) {
+    public int getCategoryCount() {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        String countQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
 
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_CATEGORY_NAME, category.getName());
-
-        // updating row
-        return db.update(TABLE_CATEGORIES, values, COLUMN_ID + " = " + category.getId(),null);
-
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return count;
     }
 
     /*
@@ -385,6 +481,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // now delete the category
         db.delete(TABLE_CATEGORIES, COLUMN_ID + " = " + category.getId(),null);
+        db.close();
     }
 
     // closing database
@@ -399,4 +496,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    /*
+     * Updating an article
+     */
+    /*public int updateArticle(Article article) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ARTICLE_TITLE, article.getTitle());
+        values.put(COLUMN_ARTICLE_PUBLISH_DATE, article.getPublishDate());
+        values.put(COLUMN_ARTICLE_AUTHOR, article.getAuthor());
+        values.put(COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
+        values.put(COLUMN_ARTICLE_URL_LINK, article.getUrlLink());
+        values.put(COLUMN_ARTICLE_CATEGORY_ID, article.getCategoryID());
+
+        // updating row
+        return db.update(TABLE_ARTICLES, values, COLUMN_ID + " = " + article.getId(),null);
+    }*/
+    /*
+     * Creating category
+     */
+    /*public long createCategory(Category category) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_NAME, category.getName());
+        values.put(COLUMN_CREATED_AT, getDateTime());
+
+        // insert row
+        long categoryID = db.insert(TABLE_CATEGORIES, null, values);
+
+        return categoryID;
+    }*/
+    /*
+     * Updating a category
+     */
+    /*public int updateCategory(Category category) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_NAME, category.getName());
+
+        // updating row
+        return db.update(TABLE_CATEGORIES, values, COLUMN_ID + " = " + category.getId(),null);
+
+    }*/
 }

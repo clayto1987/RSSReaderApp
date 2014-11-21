@@ -105,4 +105,15 @@ public class Article {
     public long getCategoryID() {
         return this.categoryID;
     }
+
+    public String toString() {
+        return "Article ID: " + this.getId()
+                + "Article Created At: " + this.getCreatedAt()
+                + "Article Title: " + this.getTitle()
+                + "Article Publish Date: " + this.getPublishDate()
+                + "Article Author: " + this.getAuthor()
+                + "Article Description: " + this.getDescription()
+                + "Article URL Link: " + this.getUrlLink()
+                + "Article Category ID: " + this.getCategoryID();
+    }
 }

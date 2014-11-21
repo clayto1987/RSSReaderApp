@@ -78,7 +78,7 @@ public class MainActivity extends Activity {
     private CharSequence mTitle;
     private String[] mRSSCatagories;
 
-    private String urlFeed, fontSizePref, themePref, sortingPref;
+    private String urlFeed, fontSizePref, themePref, sortingPref, selectedCategory;
     private String defaultFeedPref = "";
     private Set<String> subscribedFeedsPref;
     private int maxPostsPref = 10;
@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
         if(!defaultFeedPref.equals("")) {
             getRSSFeed(defaultFeedPref);
         } else {
+            selectedCategory = getResources().getStringArray(R.array.pref_default_feed_entries)[0];
             getRSSFeed(getResources().getStringArray(R.array.pref_default_feed_entries_values)[0]);
         }
 
@@ -238,7 +239,7 @@ public class MainActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            //String category = getResources().getStringArray(R.array.pref_default_feed_entries)[position];
+            selectedCategory = getResources().getStringArray(R.array.pref_default_feed_entries)[position];
             String categoryURL = getResources().getStringArray(R.array.pref_default_feed_entries_values)[position];
             PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString(getString(R.string.pref_defaultFeed_key),categoryURL).commit();
             getRSSFeed(categoryURL);
@@ -360,6 +361,11 @@ public class MainActivity extends Activity {
             args.putStringArrayList(RSSFeedsFragment.DESCRIPTIONS_ARRAYLIST, descriptionsLimitedSet);
             args.putStringArrayList(RSSFeedsFragment.LINKS_ARRAYLIST,linksLimitedSet);
 
+            if(selectedCategory == null || selectedCategory.equals("")) {
+                selectedCategory = getSelectedCategory();
+            }
+
+            args.putString(RSSFeedsFragment.SELECTED_CATEGORY,selectedCategory);
             args.putString(getString(R.string.pref_fontSize_key),fontSizePref);
             args.putString(getString(R.string.pref_colorScheme_key),themePref);
 
@@ -373,6 +379,28 @@ public class MainActivity extends Activity {
             //message.setVisibility(View.GONE);
             //listView.setAdapter(adapter);
         }
+    }
+
+    private String getSelectedCategory() {
+
+        String category = "";
+        boolean isFound = false;
+        String[] allCategoriesURL = getResources().getStringArray(R.array.pref_default_feed_entries_values);
+        String[] allCategories = getResources().getStringArray(R.array.pref_default_feed_entries);
+        int counter = 0;
+
+        while (counter < allCategoriesURL.length && !isFound) {
+
+            if(allCategoriesURL[counter].equals(defaultFeedPref)) {
+                category = allCategories[counter];
+                isFound = true;
+            }
+
+            counter++;
+        }
+
+        return category;
+
     }
 
 }
