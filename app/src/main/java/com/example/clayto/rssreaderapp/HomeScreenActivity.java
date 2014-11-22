@@ -84,11 +84,12 @@ public class HomeScreenActivity extends Activity {
     }
 
     public void viewLiveFeeds(View view) {
-        Intent intent = new Intent(HomeScreenActivity.this,MainActivity.class);
+        Intent intent = new Intent(HomeScreenActivity.this,NewArticlesActivity.class);
         startActivity(intent);
     }
 
     public void viewSavedFeeds(View view) {
-
+        Intent intent = new Intent(HomeScreenActivity.this,SavedArticlesActivity.class);
+        startActivity(intent);
     }
 }

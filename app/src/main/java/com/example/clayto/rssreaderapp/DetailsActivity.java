@@ -32,6 +32,7 @@ public class DetailsActivity extends Activity {
     protected String title, author, publishDate, description, link, fontSizePref, themePref, selectedCategory;
     private TextView titleTextView, authorTextView, dateTextView, descriptionTextView, linkTextView;
     private ProgressDialog mProgressDialog;
+    boolean isNewArticle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +43,23 @@ public class DetailsActivity extends Activity {
         try {
 
             Intent intent = getIntent();
-            int arrayListPosition = intent.getIntExtra(RSSFeedsFragment.SELECTED_ARRAY_POSITION,0);
-            title = intent.getStringArrayListExtra(RSSFeedsFragment.TITLES_ARRAYLIST).get(arrayListPosition);
-            publishDate = intent.getStringArrayListExtra(RSSFeedsFragment.PUBLISH_DATES_ARRAYLIST).get(arrayListPosition);
+            //int arrayListPosition = intent.getIntExtra(RSSFeedsFragment.SELECTED_ARRAY_POSITION,0);
+            //title = intent.getStringArrayListExtra(RSSFeedsFragment.TITLES_ARRAYLIST).get(arrayListPosition);
+            //publishDate = intent.getStringArrayListExtra(RSSFeedsFragment.PUBLISH_DATES_ARRAYLIST).get(arrayListPosition);
             //description = intent.getStringArrayListExtra(RSSFeedsFragment.DESCRIPTIONS_ARRAYLIST).get(arrayListPosition);
-            link = intent.getStringArrayListExtra(RSSFeedsFragment.LINKS_ARRAYLIST).get(arrayListPosition);
-            selectedCategory = intent.getStringExtra(RSSFeedsFragment.SELECTED_CATEGORY);
+            //link = intent.getStringArrayListExtra(RSSFeedsFragment.LINKS_ARRAYLIST).get(arrayListPosition);
+            title = intent.getStringExtra(getResources().getString(R.string.titles));
+            publishDate = intent.getStringExtra(getResources().getString(R.string.publish_dates));
+            description = intent.getStringExtra(getResources().getString(R.string.descriptions));
+            link = intent.getStringExtra(getResources().getString(R.string.links));
+            isNewArticle = intent.getBooleanExtra(getResources().getString(R.string.is_new),false);
+
+            if(isNewArticle) {
+                selectedCategory = intent.getStringExtra(getResources().getString(R.string.selected_category));
+            } else {
+                author = intent.getStringExtra(getResources().getString(R.string.author));
+            }
+
 
             String htmlLink = "<a href=\"" + link + "\"> Read More</a>";
 
@@ -113,13 +125,17 @@ public class DetailsActivity extends Activity {
             linkTextView.setTextSize(16);
         }
 
-        new ParseHTML().execute();
+        if(isNewArticle) {
+            new ParseHTML().execute();
+        }
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        menu.findItem(R.id.action_download_article).setEnabled(isNewArticle);
         return true;
     }
 
@@ -131,7 +147,7 @@ public class DetailsActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_download_article:
                 saveArticleToDatabase();
-//                Intent parseArticleIntent = new Intent(DetailsActivity.this,FullArticleActivity.class);
+//                Intent parseArticleIntent = new Intent(DetailsActivity.this,SavedArticlesActivity.class);
 //                parseArticleIntent.putExtra(getResources().getString(R.string.article_title),title);
 //                parseArticleIntent.putExtra(getResources().getString(R.string.article_publish_date),publishDate);
 //                parseArticleIntent.putExtra(getResources().getString(R.string.article_url_link),link);
@@ -153,84 +169,27 @@ public class DetailsActivity extends Activity {
 
             DatabaseHelper db = new DatabaseHelper(this);
 
-            Category category = db.getCategoryByName(selectedCategory);
+            if(!db.articleWithTitleExists(title)) {
 
-            if(category != null && category.getId() > 0) {
+                Category category = db.getCategoryByName(selectedCategory);
 
-                Article article = new Article(title,publishDate,author,description,link,category.getId());
-                Log.d("Article",article.toString());
-                long articleID = db.createArticle(article);
-                Log.d("ID of Article saved", Long.toString(articleID));
-                Log.d("Article Count", "Article count: " + db.getArticleCount());
+                if(category != null && category.getId() > 0) {
+
+                    Article article = new Article(title,publishDate,author,description,link,category.getId());
+                    Log.d("Article",article.toString());
+                    long articleID = db.createArticle(article);
+                    Log.d("ID of Article saved", Long.toString(articleID));
+                    Log.d("Article Count", "Article count: " + db.getArticleCount());
+                }
+
+            } else {
+                Toast.makeText(DetailsActivity.this,"Article has already been saved to the database",Toast.LENGTH_LONG).show();
             }
 
         } catch (Exception e) {
             Log.e("DetailsActivity.saveArticleToDatabase","Couldn't save article to database");
         }
 
-        /*// Creating tags
-        Tag tag1 = new Tag("Shopping");
-        // Inserting tags in db
-        long tag1_id = db.createTag(tag1);
-        Log.d("Tag Count", "Tag Count: " + db.getAllTags().size());
-        // Creating ToDos
-        Todo todo1 = new Todo("iPhone 5S", 0);
-        // Inserting todos in db
-        // Inserting todos under "Shopping" Tag
-        long todo1_id = db.createToDo(todo1, new long[] { tag1_id });
-        Log.e("Todo Count", "Todo count: " + db.getToDoCount());
-        // "Post new Article" - assigning this under "Important" Tag
-        // Now this will have - "Androidhive" and "Important" Tags
-        db.createTodoTag(todo10_id, tag2_id);
-        // Getting all tag names
-        Log.d("Get Tags", "Getting All Tags");
-
-        List<Tag> allTags = db.getAllTags();
-        for (Tag tag : allTags) {
-            Log.d("Tag Name", tag.getTagName());
-        }
-
-        // Getting all Todos
-        Log.d("Get Todos", "Getting All ToDos");
-
-        List<Todo> allToDos = db.getAllToDos();
-        for (Todo todo : allToDos) {
-            Log.d("ToDo", todo.getNote());
-        }
-
-        // Getting todos under "Watchlist" tag name
-        Log.d("ToDo", "Get todos under single Tag name");
-
-        List<Todo> tagsWatchList = db.getAllToDosByTag(tag3.getTagName());
-        for (Todo todo : tagsWatchList) {
-            Log.d("ToDo Watchlist", todo.getNote());
-        }
-
-        // Deleting a ToDo
-        Log.d("Delete ToDo", "Deleting a Todo");
-        Log.d("Tag Count", "Tag Count Before Deleting: " + db.getToDoCount());
-
-        db.deleteToDo(todo8_id);
-
-        Log.d("Tag Count", "Tag Count After Deleting: " + db.getToDoCount());
-
-        // Deleting all Todos under "Shopping" tag
-        Log.d("Tag Count",
-                "Tag Count Before Deleting 'Shopping' Todos: "
-                        + db.getToDoCount());
-
-        db.deleteTag(tag1, true);
-
-        Log.d("Tag Count",
-                "Tag Count After Deleting 'Shopping' Todos: "
-                        + db.getToDoCount());
-
-        // Updating tag name
-        tag3.setTagName("Movies to watch");
-        db.updateTag(tag3);
-
-        // Don't forget to close database connection
-        db.closeDB();*/
     }
 
     private class ParseHTML extends AsyncTask<Void, Void, Void> {

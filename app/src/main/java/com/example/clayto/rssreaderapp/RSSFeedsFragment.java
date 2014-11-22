@@ -19,12 +19,12 @@ public class RSSFeedsFragment extends ListFragment {
     //public static final String ARG_RSS_CATAGORY = "rss_catagory";
     //public static final String ARG_RSS_TITLES = "rss_titles";
     //public static final String ARG_RSS_PUBLISH_DATES = "rss_publish_dates";
-    public static final String SELECTED_ARRAY_POSITION = "SELECTED_ARRAY_POSITION";
-    public static final String TITLES_ARRAYLIST = "TITLES_ARRAYLIST";
-    public static final String PUBLISH_DATES_ARRAYLIST = "PUBLISH_DATES_ARRAYLIST";
-    public static final String DESCRIPTIONS_ARRAYLIST = "DESCRIPTIONS_ARRAYLIST";
-    public static final String LINKS_ARRAYLIST = "LINKS_ARRAYLIST";
-    public static final String SELECTED_CATEGORY = "SELECTED_CATEGORY";
+    //public static final String SELECTED_ARRAY_POSITION = "SELECTED_ARRAY_POSITION";
+    //public static final String TITLES = "TITLES";
+    //public static final String PUBLISH_DATES = "PUBLISH_DATES";
+    //public static final String DESCRIPTIONS = "DESCRIPTIONS";
+    //public static final String LINKS = "LINKS";
+    //public static final String SELECTED_CATEGORY = "SELECTED_CATEGORY";
     //String[] AndroidOS = new String[] { "Cupcake","Donut","Eclair","Froyo","Gingerbread","Honeycomb","Ice Cream SandWich","Jelly Bean","KitKat" };
     //String[] Version = new String[]{"1.5","1.6","2.0-2.1","2.2","2.3","3.0-3.2","4.0","4.1-4.3","4.4"};
     //ArrayList<String> versionName = new ArrayList<String>(Arrays.asList(new String[]{ "Cupcake","Donut","Eclair","Froyo","Gingerbread","Honeycomb","Ice Cream SandWich","Jelly Bean","KitKat" }));
@@ -40,11 +40,11 @@ public class RSSFeedsFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.list_fragment, container, false);
         //int i = getArguments().getInt(ARG_RSS_CATAGORY);
-        titles = getArguments().getStringArrayList(TITLES_ARRAYLIST);
-        publishDates = getArguments().getStringArrayList(PUBLISH_DATES_ARRAYLIST);
-        descriptions = getArguments().getStringArrayList(DESCRIPTIONS_ARRAYLIST);
-        links = getArguments().getStringArrayList(LINKS_ARRAYLIST);
-        selectedCategory = getArguments().getString(SELECTED_CATEGORY);
+        titles = getArguments().getStringArrayList(getResources().getString(R.string.titles));
+        publishDates = getArguments().getStringArrayList(getResources().getString(R.string.publish_dates));
+        descriptions = getArguments().getStringArrayList(getResources().getString(R.string.descriptions));
+        links = getArguments().getStringArrayList(getResources().getString(R.string.links));
+        selectedCategory = getArguments().getString(getResources().getString(R.string.selected_category));
 
         fontSize = getArguments().getString(getString(R.string.pref_fontSize_key));
         themeColor = getArguments().getString(getString(R.string.pref_colorScheme_key));
@@ -75,12 +75,13 @@ public class RSSFeedsFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
 
         Intent intent = new Intent(getActivity(),DetailsActivity.class);
-        intent.putExtra(SELECTED_ARRAY_POSITION,position);
-        intent.putExtra(TITLES_ARRAYLIST,titles);
-        intent.putExtra(PUBLISH_DATES_ARRAYLIST,publishDates);
-        intent.putExtra(DESCRIPTIONS_ARRAYLIST,descriptions);
-        intent.putExtra(LINKS_ARRAYLIST,links);
-        intent.putExtra(SELECTED_CATEGORY,selectedCategory);
+        //intent.putExtra(SELECTED_ARRAY_POSITION,position);
+        intent.putExtra(getResources().getString(R.string.titles),titles.get(position));
+        intent.putExtra(getResources().getString(R.string.publish_dates),publishDates.get(position));
+        intent.putExtra(getResources().getString(R.string.descriptions),descriptions.get(position));
+        intent.putExtra(getResources().getString(R.string.links),links.get(position));
+        intent.putExtra(getResources().getString(R.string.selected_category),selectedCategory);
+        intent.putExtra(getResources().getString(R.string.is_new),true);
         startActivity(intent);
 //            TextFragment txt = (TextFragment)getFragmentManager().findFragmentById(R.id.fragment2);
 //            txt.change(AndroidOS[position],"Version : "+Version[position]);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.example.clayto.rssreaderapp.R;
@@ -115,25 +116,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public long createArticle(Article article) {
 
+        String sql = "INSERT INTO " + TABLE_ARTICLES
+                + " (" + COLUMN_ARTICLE_TITLE + ", " + COLUMN_ARTICLE_PUBLISH_DATE + ", " + COLUMN_ARTICLE_AUTHOR + ", "
+                + COLUMN_ARTICLE_DESCRIPTION + ", " + COLUMN_ARTICLE_URL_LINK + ", " + COLUMN_ARTICLE_CATEGORY_ID + ", " + COLUMN_CREATED_AT
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
         SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_ARTICLE_TITLE, article.getTitle());
-        values.put(COLUMN_ARTICLE_PUBLISH_DATE, article.getPublishDate());
-        values.put(COLUMN_ARTICLE_AUTHOR, article.getAuthor());
-        values.put(COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
-        values.put(COLUMN_ARTICLE_URL_LINK, article.getUrlLink());
+        SQLiteStatement statement = db.compileStatement(sql);
+        statement.bindString(1, article.getTitle());
+        statement.bindString(2, article.getPublishDate());
+        statement.bindString(3, article.getAuthor());
+        statement.bindString(4, article.getDescription());
+        statement.bindString(5, article.getUrlLink());
+        statement.bindLong(6, article.getCategoryID());
+        statement.bindString(7, getDateTime());
+        long articleID = statement.executeInsert();
+
+        /*ContentValues values = new ContentValues();
+        values.put(COLUMN_ARTICLE_TITLE, DatabaseUtils.sqlEscapeString(article.getTitle()));
+        values.put(COLUMN_ARTICLE_PUBLISH_DATE, DatabaseUtils.sqlEscapeString(article.getPublishDate()));
+        values.put(COLUMN_ARTICLE_AUTHOR, DatabaseUtils.sqlEscapeString(article.getAuthor()));
+        values.put(COLUMN_ARTICLE_DESCRIPTION, DatabaseUtils.sqlEscapeString(article.getDescription()));
+        values.put(COLUMN_ARTICLE_URL_LINK, DatabaseUtils.sqlEscapeString(article.getUrlLink()));
         //values.put(COLUMN_ARTICLE_CATEGORY_ID, article.getCategoryID());
         values.put(COLUMN_ARTICLE_CATEGORY_ID,article.getCategoryID());
-        values.put(COLUMN_CREATED_AT, getDateTime());
+        values.put(COLUMN_CREATED_AT, DatabaseUtils.sqlEscapeString(getDateTime()));
 
         // insert row
-        long articleID = db.insert(TABLE_ARTICLES, null, values);
+        long articleID = db.insert(TABLE_ARTICLES, null, values);*/
 
-        // assigning tags to todos
-        /*for (long tag_id : tag_ids) {
-            createTodoTag(todo_id, tag_id);
-        }*/
         db.close();
 
         return articleID;
@@ -142,7 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
      * Get single article
      */
-    public Article getArticle(long articleID) {
+    /*public Article getArticle(long articleID) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Article article = new Article();
@@ -173,32 +184,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return article;
-    }
+    }*/
 
     /*
      * Checking to see if article with specific title exists
      */
-    public int articleWithTitleExists(String articleTitle) {
+    public boolean articleWithTitleExists(String articleTitle) {
 
-        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " LIKE '%" + articleTitle + "%';";
+        boolean articleExists = false;
+        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " = ?";
+
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {articleTitle});
 
         int count = cursor.getCount();
+
         cursor.close();
         db.close();
+
+        if(count > 0) {
+            articleExists = true;
+        }
         // return count
-        return count;
+        return articleExists;
     }
     /*
      * Get single article
      */
-    public Article getArticleByTitle(String articleTitle) {
+    /*public Article getArticleByTitle(String articleTitle) {
 
         SQLiteDatabase db = this.getReadableDatabase();
         Article article = new Article();
 
-        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " LIKE '%" + articleTitle + "%';";
+        String selectQuery = "SELECT * FROM " + TABLE_ARTICLES + " WHERE " + COLUMN_ARTICLE_TITLE + " LIKE '%" + DatabaseUtils.sqlEscapeString(articleTitle) + "%';";
 
         Log.e(LOG, selectQuery);
 
@@ -224,17 +242,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return article;
-    }
+    }*/
 
     /*
      * Getting all articles
      */
-    public List<Article> getAllArticles() {
+    public ArrayList<Article> getAllArticles() {
 
-        List<Article> articles = new ArrayList<Article>();
+        ArrayList<Article> articles = new ArrayList<Article>();
         String selectQuery = "SELECT * FROM " + TABLE_ARTICLES;
 
-        Log.e(LOG, selectQuery);
+        Log.d(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -270,20 +288,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
      * Getting all articles under single category
      */
-    public List<Article> getAllArticlesByCategory(String categoryName) {
+    /*public List<Article> getAllArticlesByCategory(String categoryName) {
 
         List<Article> articles = new ArrayList<Article>();
         //SELECT * FROM todos td, tags tg, todo_tags tt WHERE tg.tag_name = ‘Watchlist’ AND tg.id = tt.tag_id AND td.id = tt.todo_id;
         //SELECT * FROM articles, categories WHERE categories.name = categoryName AND categories.id = articles.category_id
-        /*String selectQuery = "SELECT  * FROM " + TABLE_TODO + " td, "
+        *//*String selectQuery = "SELECT  * FROM " + TABLE_TODO + " td, "
         + TABLE_TAG + " tg, " + TABLE_TODO_TAG + " tt WHERE tg."
                 + KEY_TAG_NAME + " = '" + tag_name + "'" + " AND tg." + KEY_ID
                 + " = " + "tt." + KEY_TAG_ID + " AND td." + KEY_ID + " = "
-                + "tt." + KEY_TODO_ID;*/
+                + "tt." + KEY_TODO_ID;*//*
 
         String selectQuery = "SELECT *"
                 + " FROM " + TABLE_ARTICLES + ", " + TABLE_CATEGORIES
-                + " WHERE " + TABLE_CATEGORIES + "." + COLUMN_CATEGORY_NAME + " = '" + categoryName + "'"
+                + " WHERE " + TABLE_CATEGORIES + "." + COLUMN_CATEGORY_NAME + " = '" + DatabaseUtils.sqlEscapeString(categoryName) + "'"
                 + " AND " + TABLE_CATEGORIES + "." + COLUMN_ID + " = " + TABLE_ARTICLES + "." + COLUMN_ARTICLE_CATEGORY_ID;
 
         Log.e(LOG, selectQuery);
@@ -318,7 +336,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return articles;
-    }
+    }*/
 
     /*
      * Getting article count
@@ -345,37 +363,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-
-    /*
-     * Get single category
-     */
-    public Category getCategory(long categoryID) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Category category = new Category();
-
-        String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_ID + " = " + categoryID;
-
-        Log.e(LOG, selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c != null) {
-
-            c.moveToFirst();
-
-            category.setId(c.getInt((c.getColumnIndex(COLUMN_ID))));
-            category.setCreatedAt(c.getString(c.getColumnIndex(COLUMN_CREATED_AT)));
-            category.setName((c.getString(c.getColumnIndex(COLUMN_CATEGORY_NAME))));
-
-            c.close();
-        }
-
-        db.close();
-
-        return category;
-    }
-
     /*
      * Get single category
      */
@@ -384,11 +371,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Category category = new Category();
 
-        String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_CATEGORY_NAME + " LIKE '%" + categoryName + "%';";
+        String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_CATEGORY_NAME + " = ?";
 
-        Log.e(LOG, selectQuery);
+        Log.d(LOG, selectQuery);
 
-        Cursor c = db.rawQuery(selectQuery, null);
+        Cursor c = db.rawQuery(selectQuery, new String[] {categoryName});
 
         if (c != null) {
 
@@ -415,7 +402,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Category> categories = new ArrayList<Category>();
         String selectQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
 
-        Log.e(LOG, selectQuery);
+        Log.d(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -442,53 +429,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return categories;
-    }
-
-    /*
-     * Getting category count
-     */
-    public int getCategoryCount() {
-
-        String countQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-
-        int count = cursor.getCount();
-        cursor.close();
-        db.close();
-        // return count
-        return count;
-    }
-
-    /*
-     * Deleting a category
-     */
-    public void deleteCategory(Category category, boolean should_delete_all_tag_articles) {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        // before deleting category check if articles under this category should also be deleted
-        if (should_delete_all_tag_articles) {
-            // get all articles under this tag
-            List<Article> allCategoryArticles = getAllArticlesByCategory(category.getName());
-
-            // delete all articles
-            for (Article categoryArticle : allCategoryArticles) {
-                // delete article
-                deleteArticle(categoryArticle.getId());
-            }
-        }
-
-        // now delete the category
-        db.delete(TABLE_CATEGORIES, COLUMN_ID + " = " + category.getId(),null);
-        db.close();
-    }
-
-    // closing database
-    public void closeDB() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        if (db != null && db.isOpen())
-            db.close();
     }
 
     private String getDateTime() {
@@ -532,6 +472,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return categoryID;
     }*/
     /*
+     * Get single category
+     */
+    /*public Category getCategory(long categoryID) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Category category = new Category();
+
+        String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES + " WHERE " + COLUMN_ID + " = " + categoryID;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null) {
+
+            c.moveToFirst();
+
+            category.setId(c.getInt((c.getColumnIndex(COLUMN_ID))));
+            category.setCreatedAt(c.getString(c.getColumnIndex(COLUMN_CREATED_AT)));
+            category.setName((c.getString(c.getColumnIndex(COLUMN_CATEGORY_NAME))));
+
+            c.close();
+        }
+
+        db.close();
+
+        return category;
+    }*/
+    /*
+     * Getting category count
+     */
+    /*public int getCategoryCount() {
+
+        String countQuery = "SELECT  * FROM " + TABLE_CATEGORIES;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        db.close();
+        // return count
+        return count;
+    }*/
+    /*
      * Updating a category
      */
     /*public int updateCategory(Category category) {
@@ -544,5 +528,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(TABLE_CATEGORIES, values, COLUMN_ID + " = " + category.getId(),null);
 
+    }*/
+
+    /*
+     * Deleting a category
+     */
+    /*public void deleteCategory(Category category, boolean should_delete_all_tag_articles) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // before deleting category check if articles under this category should also be deleted
+        if (should_delete_all_tag_articles) {
+            // get all articles under this tag
+            List<Article> allCategoryArticles = getAllArticlesByCategory(category.getName());
+
+            // delete all articles
+            for (Article categoryArticle : allCategoryArticles) {
+                // delete article
+                deleteArticle(categoryArticle.getId());
+            }
+        }
+
+        // now delete the category
+        db.delete(TABLE_CATEGORIES, COLUMN_ID + " = " + category.getId(),null);
+        db.close();
+    }*/
+
+    /*// closing database
+    public void closeDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (db != null && db.isOpen())
+            db.close();
     }*/
 }

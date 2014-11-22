@@ -11,36 +11,40 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.clayto.rssreaderapp.MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="com.example.clayto.rssreaderapp.DetailsActivity"
-            android:label="@string/title_activity_details"
-            android:parentActivityName="com.example.clayto.rssreaderapp.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.clayto.rssreaderapp.MainActivity" />
-        </activity>
-        <activity
-            android:name="com.example.clayto.rssreaderapp.SettingsActivity"
-            android:label="@string/action_settings" >
-        </activity>
-        <activity
-            android:name="com.example.clayto.rssreaderapp.FullArticleActivity"
-            android:label="@string/title_activity_full_article"
-            android:parentActivityName="com.example.clayto.rssreaderapp.DetailsActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.clayto.rssreaderapp.DetailsActivity" />
-        </activity>
-        <activity
             android:name="com.example.clayto.rssreaderapp.HomeScreenActivity"
-            android:label="@string/title_activity_home_screen" >
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SavedArticlesActivity"
+            android:label="@string/title_activity_saved_articles"
+            android:parentActivityName="com.example.clayto.rssreaderapp.HomeScreenActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.clayto.rssreaderapp.HomeScreenActivity" />
+        </activity>
+        <activity
+            android:name=".NewArticlesActivity"
+            android:label="@string/title_activity_new_articles"
+            android:parentActivityName="com.example.clayto.rssreaderapp.HomeScreenActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.clayto.rssreaderapp.HomeScreenActivity" />
+        </activity>
+        <activity
+            android:name="com.example.clayto.rssreaderapp.DetailsActivity"
+            android:label="@string/title_activity_details"
+            android:parentActivityName=".NewArticlesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.clayto.rssreaderapp.NewArticlesActivity" />
+        </activity>
+        <activity
+            android:name="com.example.clayto.rssreaderapp.SettingsActivity"
+            android:label="@string/action_settings" >
         </activity>
     </application>
 
