@@ -75,6 +75,11 @@ public class DetailsActivity extends Activity {
             linkTextView.setText(Html.fromHtml(htmlLink));
             linkTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
+            if(!isNewArticle) {
+                authorTextView.setText(author);
+                descriptionTextView.setText(description);
+            }
+
         } catch (Exception e) {
             Toast.makeText(this, "Failure", Toast.LENGTH_LONG).show();
         }
@@ -126,7 +131,14 @@ public class DetailsActivity extends Activity {
         }
 
         if(isNewArticle) {
-            new ParseHTML().execute();
+
+            try {
+                ParseHTML htmlParser = new ParseHTML();
+                htmlParser.execute();
+            } catch (Exception e) {
+                Log.e("DetailsActivity.onStart","Can't parse HTML");
+            }
+
         }
 
     }
@@ -145,6 +157,11 @@ public class DetailsActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.action_go_home:
+                finish();
+                Intent goHomeIntent = new Intent(DetailsActivity.this,HomeScreenActivity.class);
+                startActivity(goHomeIntent);
+                return true;
             case R.id.action_download_article:
                 saveArticleToDatabase();
 //                Intent parseArticleIntent = new Intent(DetailsActivity.this,SavedArticlesActivity.class);
@@ -180,6 +197,7 @@ public class DetailsActivity extends Activity {
                     long articleID = db.createArticle(article);
                     Log.d("ID of Article saved", Long.toString(articleID));
                     Log.d("Article Count", "Article count: " + db.getArticleCount());
+                    Toast.makeText(DetailsActivity.this,"Article successfully saved to the database",Toast.LENGTH_LONG).show();
                 }
 
             } else {
@@ -192,7 +210,7 @@ public class DetailsActivity extends Activity {
 
     }
 
-    private class ParseHTML extends AsyncTask<Void, Void, Void> {
+    class ParseHTML extends AsyncTask<Void, Void, Void> {
 
         //String author;
         //String content;
@@ -221,10 +239,23 @@ public class DetailsActivity extends Activity {
                 Elements articleContent = mainContent.select(".article > p");
 
                 //title = titleContent.get(0).text();
-                description = articleContent.text();
-                author = authorContent.get(0).text();
+                if(articleContent != null) {
+                    description = articleContent.text();
+                } else {
+                    description = "";
+                }
+
+                if(authorContent != null && authorContent.size() > 0) {
+                    author = authorContent.get(0).text();
+                } else {
+                    author = "";
+                }
+
 
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e("DetailsActivity doInBackground", "Error in doInBackground method parsing html");
                 e.printStackTrace();
             }
             return null;

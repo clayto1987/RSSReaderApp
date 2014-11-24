@@ -211,6 +211,9 @@ public class NewArticlesActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+            case R.id.action_go_home:
+                finish();
+                return true;
             case R.id.action_websearch:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);

@@ -106,6 +106,9 @@ public class SavedArticlesActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.action_go_home:
+                finish();
+                return true;
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(SavedArticlesActivity.this,SettingsActivity.class);
                 startActivity(settingsIntent);
@@ -120,12 +123,14 @@ public class SavedArticlesActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             //String item = (String) parent.getItemAtPosition(position);
-            Intent intent = new Intent(MainActivity.this,DetailsActivity.class);
-            intent.putExtra(SELECTED_ARRAY_POSITION,position);
-            intent.putExtra(TITLES_ARRAYLIST,names);
-            intent.putExtra(PUBLISH_DATES_ARRAYLIST,dates);
-            intent.putExtra(DESCRIPTIONS_ARRAYLIST,descriptions);
-            intent.putExtra(LINKS_ARRAYLIST,links);
+            Intent intent = new Intent(SavedArticlesActivity.this,DetailsActivity.class);
+            //intent.putExtra(SELECTED_ARRAY_POSITION,position);
+            intent.putExtra(getResources().getString(R.string.titles),titles.get(position));
+            intent.putExtra(getResources().getString(R.string.publish_dates),publishDates.get(position));
+            intent.putExtra(getResources().getString(R.string.author),authors.get(position));
+            intent.putExtra(getResources().getString(R.string.descriptions),descriptions.get(position));
+            intent.putExtra(getResources().getString(R.string.links),links.get(position));
+            intent.putExtra(getResources().getString(R.string.is_new),false);
             startActivity(intent);
         }
     }
