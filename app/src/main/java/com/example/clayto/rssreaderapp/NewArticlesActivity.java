@@ -68,6 +68,10 @@ import javax.xml.parsers.SAXParserFactory;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
+/*
+ * Shows the user a list of all articles (titles and dates for a given RSS category from the Winnipeg Free Press
+ * Allows the user to select a different category from a navigation drawer and it will show them the articles from that category
+ */
 public class NewArticlesActivity extends Activity {
 
     private DrawerLayout mDrawerLayout;
@@ -89,13 +93,11 @@ public class NewArticlesActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //PreferenceManager.getDefaultSharedPreferences(this).edit().clear().commit();
-        //PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_articles);
 
         mTitle = mDrawerTitle = getTitle();
+        //set the options that are displayed in the navigation drawer
         mRSSCatagories = getResources().getStringArray(R.array.pref_default_feed_entries);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
@@ -131,19 +133,18 @@ public class NewArticlesActivity extends Activity {
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-//        if (savedInstanceState == null) {
-//            selectItem(0);
-//        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
+        //get the user's settings from the settings activity and set the font size and background color based on their preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         themePref = sharedPref.getString(getString(R.string.pref_colorScheme_key),"");
         fontSizePref = sharedPref.getString(getString(R.string.pref_fontSize_key),"");
 
+        //if there isn't a default feed saved get the user's selected default feed from shared preferences
         if(defaultFeedPref.equals("")) {
             defaultFeedPref = sharedPref.getString(getString(R.string.pref_defaultFeed_key),"");
         }
@@ -152,12 +153,7 @@ public class NewArticlesActivity extends Activity {
         sortingPref = sharedPref.getString(getString(R.string.pref_sorting_key),"");
         subscribedFeedsPref = sharedPref.getStringSet(getString(R.string.pref_subscribedFeeds_key),null);
 
-        /*if (themePref.equals("Dark")) {
-            findViewById(R.id.drawer_layout).setBackgroundColor(Color.BLACK);
-        } else {
-            findViewById(R.id.drawer_layout).setBackgroundColor(Color.WHITE);
-        }*/
-
+        //if there is a default feed saved get the articles from that category otherwise, get articles from the first category
         if(!defaultFeedPref.equals("")) {
             getRSSFeed(defaultFeedPref);
         } else {
@@ -167,19 +163,17 @@ public class NewArticlesActivity extends Activity {
 
     }
 
+    //start to retrieve articles for a specific RSS category
     private void getRSSFeed(String feedName){
-
-        //message.setVisibility(View.VISIBLE);
+        //ensure the user has an internet connection
         ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // fetch data
-            //message.setText(R.string.please_wait);
             urlFeed = feedName;
             RSSFeeder feedme = new RSSFeeder();
             feedme.execute();
         } else {
-            //message.setText(R.string.no_internet);
             Toast.makeText(NewArticlesActivity.this,"Please verify you are connected to the internet.",Toast.LENGTH_LONG).show();
         }
 
@@ -211,9 +205,11 @@ public class NewArticlesActivity extends Activity {
         }
         // Handle action buttons
         switch(item.getItemId()) {
+            //when the user clicks the home button close this activity (returning user to home screen)
             case R.id.action_go_home:
                 finish();
                 return true;
+            //when the user clicks the search button search the web for the current category selected
             case R.id.action_websearch:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
@@ -225,9 +221,11 @@ public class NewArticlesActivity extends Activity {
                     Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
                 }
                 return true;
+            //when the user clicks refresh re-retrieve all articles for the current category
             case R.id.action_refresh:
                 getRSSFeed(urlFeed);
                 return true;
+            //when the user clicks settings launch the settings activity
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(NewArticlesActivity.this,SettingsActivity.class);
                 startActivity(settingsIntent);
@@ -241,37 +239,21 @@ public class NewArticlesActivity extends Activity {
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            //when the user selects a category from the navigation drawer, get the category and URL for that category
+            //save the selected category to the shared preferences and load the articles for that category
+            //then close the navigation drawer
             selectedCategory = getResources().getStringArray(R.array.pref_default_feed_entries)[position];
             String categoryURL = getResources().getStringArray(R.array.pref_default_feed_entries_values)[position];
+
             PreferenceManager.getDefaultSharedPreferences(NewArticlesActivity.this).edit().putString(getString(R.string.pref_defaultFeed_key),categoryURL).commit();
+
             getRSSFeed(categoryURL);
+
             mDrawerList.setItemChecked(position, true);
             setTitle(mRSSCatagories[position]);
             mDrawerLayout.closeDrawer(mDrawerList);
-            //selectItem(position);
         }
     }
-
-    //private void selectItem(int position) {
-//    private void selectItem() {
-//        // update the menu_new_articles content by replacing fragments
-////        Fragment fragment = new PlanetFragment();
-////        Fragment fragment = new MenuFragment();
-//        Fragment fragment = new RSSFeedsFragment();
-//        Bundle args = new Bundle();
-//        args.putStringArrayList(RSSFeedsFragment.ARG_RSS_TITLES, names);
-//        args.putStringArrayList(RSSFeedsFragment.ARG_RSS_PUBLISH_DATES,dates);
-//        fragment.setArguments(args);
-//
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-//
-//        // update selected item and title, then close the drawer
-////        mDrawerList.setItemChecked(position, true);
-////        setTitle(mRSSCatagories[position]);
-////        mDrawerLayout.closeDrawer(mDrawerList);
-//    }
 
     @Override
     public void setTitle(CharSequence title) {
@@ -297,14 +279,18 @@ public class NewArticlesActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-
+    /*
+     * Class that starts an Asynctask on another thread to retrieve all of the articles from the selected category
+     */
     class RSSFeeder extends AsyncTask<Void, Void, Void> {
 
         SAXHandler handler;
 
         @Override
         protected Void doInBackground(Void... params) {
+
             try {
+                //connects to the URL and reads in all data from it and parses out the required elements (titles, descriptions, dates, link)
                 xml_file = new URL(urlFeed);
                 in = new BufferedReader(new InputStreamReader(xml_file.openStream()));
 
@@ -331,6 +317,7 @@ public class NewArticlesActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
 
+            //once the entire URL has been processed get the titles, publishDates, description snippets and links for all articles in the category
             names = handler.getTitles();
             dates = handler.getPublishDates();
             descriptions = handler.getDescriptions();
@@ -341,6 +328,7 @@ public class NewArticlesActivity extends Activity {
             ArrayList<String> descriptionsLimitedSet = new ArrayList<String>();
             ArrayList<String> linksLimitedSet = new ArrayList<String>();
 
+            //if the user has limited the number of posts they want to see, only get that number of posts to display
             if (maxPostsPref <= names.size() ) {
 
                 for(int i = 0; i < maxPostsPref; i++){
@@ -357,6 +345,8 @@ public class NewArticlesActivity extends Activity {
                 linksLimitedSet = links;
             }
 
+            //instantiate RSSFeeds fragment and pass it all required data
+            //This fragement will have a list view to show all article titles and dates
             Fragment fragment = new RSSFeedsFragment();
             Bundle args = new Bundle();
             args.putStringArrayList(getResources().getString(R.string.titles), namesLimitedSet);
@@ -377,13 +367,13 @@ public class NewArticlesActivity extends Activity {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-            //CustomAdapter adapter = new CustomAdapter(NewArticlesActivity.this,namesLimitedSet,datesLimitedSet,fontSizePref, themePref);
-            //setListAdapter(adapter);
-            //message.setVisibility(View.GONE);
-            //listView.setAdapter(adapter);
         }
     }
 
+    /*
+     * Retrieves the category name based on the saved selected category URL
+     * the categories and their URL's are parallel arrays thus the selected position in one = the selected position in the other
+     */
     private String getSelectedCategory() {
 
         String category = "";

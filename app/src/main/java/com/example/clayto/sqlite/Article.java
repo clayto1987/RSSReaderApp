@@ -2,6 +2,7 @@ package com.example.clayto.sqlite;
 
 /**
  * Created by Clayto on 14-11-19.
+ * Model for an Article containing all necessary data
  */
 public class Article {
 

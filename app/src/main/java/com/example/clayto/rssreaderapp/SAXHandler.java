@@ -25,11 +25,12 @@ public class SAXHandler extends DefaultHandler {
         links = new ArrayList<String>();
     }
 
+    /*
+     * Executes each time the end of an xml element is reached
+     */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         //super.endElement(uri, localName, qName);
-        //Log.d("test", "endElement: " + qName);
-
         if (inItem) {
 
             if(qName.equals("item")) {
@@ -52,29 +53,28 @@ public class SAXHandler extends DefaultHandler {
 
     }
 
+    /*
+     * Executes each time the content inside of an xml start and end tag is reached
+     */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         //super.characters(ch, start, length);
         String s = new String(ch,start,length);
-        //Log.d("test", "characters: " + s);
 
         if(inItem) {
 
             if (inTitle || inPublishDate || inDescription || inLink) {
                 sb.append(s);
             }
-            /*if (inTitle) {
-                titles.add(s);
-            } else if (inPublishDate) {
-                publishDates.add(s);
-            } else if (inDescription) {
-                descriptions.add(s);
-            }*/
+
         }
     }
 
+    /*
+     * Executes each time the start of a new xml element is reached
+     */
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attrs) throws SAXException {
-        //Log.d("test", "startElement: " + qName);
 
         if(qName.equals("item")) {
             inItem = true;

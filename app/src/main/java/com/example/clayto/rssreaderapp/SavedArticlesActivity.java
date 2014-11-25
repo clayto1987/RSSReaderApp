@@ -18,7 +18,9 @@ import com.example.clayto.sqlite.DatabaseHelper;
 
 import java.util.ArrayList;
 
-
+/*
+ * Provides a list view to display all saved articles to the user and allowing them to select one to view the entire article
+ */
 public class SavedArticlesActivity extends Activity {
 
     private String fontSizePref, themePref;
@@ -34,6 +36,7 @@ public class SavedArticlesActivity extends Activity {
 
         listView = (ListView)findViewById(R.id.list_view);
 
+        //instantiates DatabaseHelper to connect to the database
         db = new DatabaseHelper(this);
 
         EventHandler eventHandler = new EventHandler();
@@ -46,6 +49,7 @@ public class SavedArticlesActivity extends Activity {
 
         super.onStart();
 
+        //get the users shared preferences to set the theme to their preference and starts to load the articles from the database
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         themePref = sharedPref.getString(getString(R.string.pref_colorScheme_key),"");
         fontSizePref = sharedPref.getString(getString(R.string.pref_fontSize_key), "");
@@ -60,12 +64,17 @@ public class SavedArticlesActivity extends Activity {
 
     }
 
+    /*
+     * Loads all articles from the database and creates the custom list adapter to display the articles in a listview
+     */
     private void loadData() {
 
         try {
 
+            //get all articles from the database
             ArrayList<Article> allArticles = db.getAllArticles();
 
+            //if some articles exist
             if(allArticles.size() > 0) {
 
                 titles = new ArrayList<String>();
@@ -106,9 +115,11 @@ public class SavedArticlesActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            //when the user clicks the home button close this activity (returning user to home screen)
             case R.id.action_go_home:
                 finish();
                 return true;
+            //when the user clicks the settings button launch the settings activity
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(SavedArticlesActivity.this,SettingsActivity.class);
                 startActivity(settingsIntent);
@@ -119,6 +130,11 @@ public class SavedArticlesActivity extends Activity {
 
     }
 
+    /*
+     * Class that handles a user clicking on an article title in the list view
+     * upon which it passes all relevant data for that article to the DetailsActivity
+     * for the user to view the whole article.
+     */
     class EventHandler implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

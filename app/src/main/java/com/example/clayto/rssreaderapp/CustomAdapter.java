@@ -19,11 +19,18 @@ public class CustomAdapter extends ArrayAdapter<String> {
     private final ArrayList<String> titles, publishDates;
     private final String fontSizePreference, themePreference;
 
+    /*
+     * Internal class to access the title and publish date for a single list item.
+     */
     static class ViewHolder {
         public TextView title;
         public TextView publishDate;
     }
 
+    /*
+     * Constructor receives arraylists containing all titles and publish dates for articles of a specific rss feed (category)
+     * Also receives the user's font size and theme preferences.
+     */
     public CustomAdapter(Activity context, ArrayList<String> titles, ArrayList<String> publishDates, String fontSizePref, String themePref) {
         super(context, R.layout.list_item, titles);
         this.context = context;
@@ -33,6 +40,9 @@ public class CustomAdapter extends ArrayAdapter<String> {
         this.themePreference = themePref;
     }
 
+    /*
+     * Executes for each element in the titles arraylist and sets the title and publish date to display for each article
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -55,6 +65,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
         String pd = "Posted on: " + publishDates.get(position);
         holder.publishDate.setText(pd);
 
+        //Set the text and background colors based on the user preferences
         if(fontSizePreference.toLowerCase().equals("small")) {
             holder.title.setTextSize(10);
             holder.publishDate.setTextSize(8);

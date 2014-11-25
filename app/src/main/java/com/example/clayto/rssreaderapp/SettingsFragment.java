@@ -5,6 +5,7 @@ import android.preference.PreferenceFragment;
 
 /**
  * Created by Clayto on 14-11-15.
+ * Adds the layout preferences.xml to the settings activity layout
  */
 public class SettingsFragment extends PreferenceFragment {
     @Override

@@ -11,6 +11,8 @@ import android.widget.NumberPicker;
 
 /**
  * Created by Clayto on 14-11-15.
+ * Class that creates a custom user setting which is a spinner allowing the use a spinner to select a number
+ * from a specific range - this was created because there is no standard preference that does this.
  */
 public class NumberPickerPreference extends DialogPreference {
 

@@ -36,11 +36,7 @@
         </activity>
         <activity
             android:name="com.example.clayto.rssreaderapp.DetailsActivity"
-            android:label="@string/title_activity_details"
-            android:parentActivityName=".NewArticlesActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.clayto.rssreaderapp.NewArticlesActivity" />
+            android:label="@string/title_activity_details">
         </activity>
         <activity
             android:name="com.example.clayto.rssreaderapp.SettingsActivity"

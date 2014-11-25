@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-
+/*
+ * Allows user to select what they want to view: saved articles or new articles
+ */
 public class HomeScreenActivity extends Activity {
 
     private String themePref, fontSizePref;
@@ -34,6 +36,7 @@ public class HomeScreenActivity extends Activity {
     protected void onStart() {
         super.onStart();
 
+        //get the user's preferences and set the background color and font size based on their preferences
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         themePref = sharedPref.getString(getString(R.string.pref_colorScheme_key),"");
         fontSizePref = sharedPref.getString(getString(R.string.pref_fontSize_key),"");
@@ -74,6 +77,7 @@ public class HomeScreenActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         // Handle action buttons
         switch(item.getItemId()) {
+            //when user clicks on Settings launch the settings activity
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(HomeScreenActivity.this,SettingsActivity.class);
                 startActivity(settingsIntent);
@@ -83,11 +87,13 @@ public class HomeScreenActivity extends Activity {
         }
     }
 
+    //when the user selects live feeds/new articles launch the NewArticlesActivity
     public void viewLiveFeeds(View view) {
         Intent intent = new Intent(HomeScreenActivity.this,NewArticlesActivity.class);
         startActivity(intent);
     }
 
+    //when the user selects saved articles launch the SavedArticlesActivity
     public void viewSavedFeeds(View view) {
         Intent intent = new Intent(HomeScreenActivity.this,SavedArticlesActivity.class);
         startActivity(intent);
